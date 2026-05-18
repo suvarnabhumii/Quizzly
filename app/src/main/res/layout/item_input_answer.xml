@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="16dp">
+
+    <EditText
+        android:id="@+id/etAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Pilihan Jawaban"
+        android:background="@drawable/bg_input_flat"
+        android:paddingHorizontal="16dp"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:textColorHint="#757575"
+        android:inputType="text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Set sebagai jawaban benar"
+            android:textSize="12sp"
+            android:textColor="#616161"/> <CheckBox
+        android:id="@+id/cbCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="#3B82F6"/>
+    </LinearLayout>
+</LinearLayout>

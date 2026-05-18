@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QuizPAS">
+        android:theme="@style/Theme.QuizPAS"
+        tools:targetApi="31">
 
         <activity
             android:name=".SplashScreen"
@@ -23,20 +26,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".KategoriActivity" />
-        <activity android:name=".CreateQuizActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".QuizHistoryActivity" />
-        <activity android:name=".AddQuestionActivity" />
-        <activity android:name=".ReviewQuizActivity" />
-        <activity android:name=".QuizResultActivity" />
-        <activity android:name=".QuizGameActivity" />
-        <activity android:name=".QuizLastActivity" />
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".RegisterActivity" android:exported="false" />
+        <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".KategoriActivity" android:exported="false" />
+        <activity android:name=".CreateQuizActivity" android:exported="false" />
+        <activity android:name=".EditProfileActivity" android:exported="false" />
+        <activity android:name=".ProfileActivity" android:exported="false" />
+        <activity android:name=".QuizHistoryActivity" android:exported="false" />
+        <activity android:name=".AddQuestionActivity" android:exported="false" />
+        <activity android:name=".ReviewQuizActivity" android:exported="false" />
+        <activity android:name=".QuizResultActivity" android:exported="false" />
+        <activity android:name=".QuizGameActivity" android:exported="false" />
+        <activity android:name=".QuizLastActivity" android:exported="false" />
 
     </application>
 

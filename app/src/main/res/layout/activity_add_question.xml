@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="24dp">
+    android:background="@color/white">
 
-    <!-- 1. HEADER CONTAINER (DIBUNGKUS AGAR BISA TURUN) -->
     <RelativeLayout
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
         android:layout_marginTop="30dp">
-        <!-- marginTop="30dp" ini yang menurunkan Judul & Tombol Close -->
 
         <ImageView
             android:id="@+id/btnClose"
@@ -32,7 +30,6 @@
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
-    <!-- 2. INDIKATOR TITIK -->
     <LinearLayout
         android:id="@+id/dotsIndicator"
         android:layout_width="wrap_content"
@@ -40,179 +37,46 @@
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/headerContainer"
-        android:layout_marginTop="40dp">
-        <!-- layout_below="@id/headerContainer" -> Posisinya di bawah header -->
-
-        <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="#E0E0E0"
-            android:layout_marginEnd="8dp"
-            style="@style/Widget.AppCompat.Button.Small"/>
-
-        <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="#000000"
-            android:backgroundTint="#000000"
-            android:layout_marginEnd="8dp"
-            style="@style/Widget.AppCompat.Button.Small"/>
-
-        <View
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="#E0E0E0"/>
+        android:layout_marginTop="30dp">
+        <View android:layout_width="8dp" android:layout_height="8dp" android:background="#E0E0E0" android:layout_marginEnd="8dp"/>
+        <View android:layout_width="8dp" android:layout_height="8dp" android:background="#000000" android:layout_marginEnd="8dp"/>
+        <View android:layout_width="8dp" android:layout_height="8dp" android:background="#E0E0E0"/>
     </LinearLayout>
 
-    <!-- 3. SCROLL CONTENT -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/dotsIndicator"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="80dp"
+        android:layout_above="@id/btnNextStep"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="24dp"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
 
             <EditText
                 android:id="@+id/etQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="60dp"
+                android:minHeight="70dp"
                 android:hint="Masukan Pertanyaan"
                 android:background="@drawable/bg_input_flat"
                 android:padding="16dp"
                 android:textSize="14sp"
                 android:textColor="#000000"
-                android:textColorHint="#94A3B8"
+                android:textColorHint="#757575"
                 android:gravity="top|start"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="20dp"/>
 
-            <EditText
-                android:id="@+id/etAnswer1"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Pilihan Jawaban 1"
-                android:background="@drawable/bg_input_flat"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp"
-                android:textColor="#000000"
-                android:textColorHint="#94A3B8"
-                android:layout_marginBottom="8dp"/>
+            <include android:id="@+id/layoutAns1" layout="@layout/item_input_answer" />
+            <include android:id="@+id/layoutAns2" layout="@layout/item_input_answer" />
+            <include android:id="@+id/layoutAns3" layout="@layout/item_input_answer" />
+            <include android:id="@+id/layoutAns4" layout="@layout/item_input_answer" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Jawaban Benar"
-                    android:textColor="#000000"/>
-                <CheckBox
-                    android:id="@+id/cbAnswer1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/etAnswer2"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Pilihan Jawaban 2"
-                android:background="@drawable/bg_input_flat"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp"
-                android:textColor="#000000"
-                android:textColorHint="#94A3B8"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Jawaban Benar"
-                    android:textColor="#000000"/>
-                <CheckBox
-                    android:id="@+id/cbAnswer2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/etAnswer3"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Pilihan Jawaban 3"
-                android:background="@drawable/bg_input_flat"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp"
-                android:textColor="#000000"
-                android:textColorHint="#94A3B8"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Jawaban Benar"
-                    android:textColor="#000000"/>
-                <CheckBox
-                    android:id="@+id/cbAnswer3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/etAnswer4"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Pilihan Jawaban 4"
-                android:background="@drawable/bg_input_flat"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp"
-                android:textColor="#000000"
-                android:textColorHint="#94A3B8"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="24dp">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Jawaban Benar"
-                    android:textColor="#000000"/>
-                <CheckBox
-                    android:id="@+id/cbAnswer4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <!-- Tombol Tambah Pilihan -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnAddOption"
                 android:layout_width="match_parent"
@@ -220,12 +84,11 @@
                 android:text="Tambah Pilihan Jawaban"
                 android:textAllCaps="false"
                 android:textStyle="bold"
-                android:background="@drawable/bg_button_grey"
-                app:backgroundTint="@null"
+                android:background="@drawable/bg_input_flat"
                 android:textColor="#000000"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Tombol Simpan -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSaveQuestion"
                 android:layout_width="match_parent"
@@ -235,12 +98,11 @@
                 android:textStyle="bold"
                 android:background="@drawable/bg_button_blue"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="40dp"/>
+                android:layout_marginBottom="20dp"/>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- 4. TOMBOL SELANJUTNYA -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnNextStep"
         android:layout_width="match_parent"

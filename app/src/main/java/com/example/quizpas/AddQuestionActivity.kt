@@ -5,45 +5,104 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quizpas.databinding.ActivityAddQuestionBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AddQuestionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddQuestionBinding
+    // Inisialisasi Firestore
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddQuestionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Tombol Close
-        binding.btnClose.setOnClickListener { finish() }
-
-        // Tombol Simpan Pertanyaan
-        binding.btnSaveQuestion.setOnClickListener {
-            if (binding.etQuestion.text.isEmpty()) {
-                Toast.makeText(this, "Isi pertanyaan dulu!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Pertanyaan disimpan!", Toast.LENGTH_SHORT).show()
-                // Di sini logika simpan ke database atau array sementara
-                // Kosongkan input setelah simpan
-                binding.etQuestion.text.clear()
-                binding.etAnswer1.text.clear()
-                binding.etAnswer2.text.clear()
-                binding.etAnswer3.text.clear()
-                binding.etAnswer4.text.clear()
+        // 1. Logika agar CheckBox hanya bisa dipilih SATU (seperti RadioButton)
+        val answerLayouts = listOf(binding.layoutAns1, binding.layoutAns2, binding.layoutAns3, binding.layoutAns4)
+        answerLayouts.forEach { layout ->
+            layout.cbCorrect.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    // Jika satu dicentang, yang lain otomatis mati
+                    answerLayouts.forEach { if (it.cbCorrect != buttonView) it.cbCorrect.isChecked = false }
+                }
             }
         }
 
-        // Di dalam AddQuestionActivity.kt
+        // 2. Tombol Close
+        binding.btnClose.setOnClickListener { finish() }
+
+        // 3. Tombol Simpan ke Firestore
+        binding.btnSaveQuestion.setOnClickListener {
+            saveToFirestore()
+        }
+
+        // 4. Tombol Selanjutnya
         binding.btnNextStep.setOnClickListener {
-            // Pindah ke halaman Review & Publikasi
             val intent = Intent(this, ReviewQuizActivity::class.java)
             startActivity(intent)
         }
 
-        // Tombol Tambah Pilihan (Hanya Hiasan/Toast karena layout kita statis 4 kolom)
         binding.btnAddOption.setOnClickListener {
             Toast.makeText(this, "Maksimal 4 pilihan jawaban", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun saveToFirestore() {
+        val questionText = binding.etQuestion.text.toString().trim()
+
+        // Mengambil teks dari setiap include
+        val ans1 = binding.layoutAns1.etAnswer.text.toString().trim()
+        val ans2 = binding.layoutAns2.etAnswer.text.toString().trim()
+        val ans3 = binding.layoutAns3.etAnswer.text.toString().trim()
+        val ans4 = binding.layoutAns4.etAnswer.text.toString().trim()
+
+        // Validasi input kosong
+        if (questionText.isEmpty() || ans1.isEmpty() || ans2.isEmpty() || ans3.isEmpty() || ans4.isEmpty()) {
+            Toast.makeText(this, "Semua kolom harus diisi!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Cek jawaban mana yang benar
+        val correctAnswer = when {
+            binding.layoutAns1.cbCorrect.isChecked -> ans1
+            binding.layoutAns2.cbCorrect.isChecked -> ans2
+            binding.layoutAns3.cbCorrect.isChecked -> ans3
+            binding.layoutAns4.cbCorrect.isChecked -> ans4
+            else -> null
+        }
+
+        if (correctAnswer == null) {
+            Toast.makeText(this, "Pilih satu jawaban yang benar!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Bungkus data ke dalam Map
+        val questionData = hashMapOf(
+            "question" to questionText,
+            "options" to listOf(ans1, ans2, ans3, ans4),
+            "answer" to correctAnswer,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        // Kirim ke Firestore (Koleksi "questions")
+        db.collection("questions")
+            .add(questionData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Berhasil simpan ke Firebase!", Toast.LENGTH_SHORT).show()
+                clearForm()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Gagal: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun clearForm() {
+        binding.etQuestion.text.clear()
+        val layouts = listOf(binding.layoutAns1, binding.layoutAns2, binding.layoutAns3, binding.layoutAns4)
+        layouts.forEach {
+            it.etAnswer.text.clear()
+            it.cbCorrect.isChecked = false
         }
     }
 }
