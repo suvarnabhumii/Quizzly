@@ -5,13 +5,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quizpas.databinding.ActivityAddQuestionBinding
-import com.google.firebase.firestore.FirebaseFirestore
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class AddQuestionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddQuestionBinding
-    // Inisialisasi Firestore
-    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +34,9 @@ class AddQuestionActivity : AppCompatActivity() {
         // 2. Tombol Close
         binding.btnClose.setOnClickListener { finish() }
 
-        // 3. Tombol Simpan ke Firestore
+        // 3. Tombol Simpan ke Laravel (Sudah diperbarui dari Firestore)
         binding.btnSaveQuestion.setOnClickListener {
-            saveToFirestore()
+            saveToLaravel()
         }
 
         // 4. Tombol Selanjutnya
@@ -48,10 +50,10 @@ class AddQuestionActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveToFirestore() {
+    private fun saveToLaravel() {
         val questionText = binding.etQuestion.text.toString().trim()
 
-        // Mengambil teks dari setiap include
+        // Mengambil teks dari setiap include jawaban
         val ans1 = binding.layoutAns1.etAnswer.text.toString().trim()
         val ans2 = binding.layoutAns2.etAnswer.text.toString().trim()
         val ans3 = binding.layoutAns3.etAnswer.text.toString().trim()
@@ -77,24 +79,37 @@ class AddQuestionActivity : AppCompatActivity() {
             return
         }
 
-        // Bungkus data ke dalam Map
-        val questionData = hashMapOf(
-            "question" to questionText,
-            "options" to listOf(ans1, ans2, ans3, ans4),
-            "answer" to correctAnswer,
-            "timestamp" to System.currentTimeMillis()
+        // 1. Bungkus data ke dalam object data class QuestionRequest
+        val optionsList = listOf(ans1, ans2, ans3, ans4)
+        val requestData = QuestionRequest(
+            question = questionText,
+            options = optionsList,
+            answer = correctAnswer
         )
 
-        // Kirim ke Firestore (Koleksi "questions")
-        db.collection("questions")
-            .add(questionData)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Berhasil simpan ke Firebase!", Toast.LENGTH_SHORT).show()
-                clearForm()
+        // 2. Inisialisasi Retrofit dengan IP laptop temanmu
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.238.116.243:8000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create(ApiService::class.java)
+
+        // 3. Jalankan pengiriman data (POST) ke server Laravel
+        apiService.saveQuestion(requestData).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@AddQuestionActivity, "Soal kuis berhasil disimpan ke Laravel!", Toast.LENGTH_SHORT).show()
+                    clearForm()
+                } else {
+                    Toast.makeText(this@AddQuestionActivity, "Gagal menyimpan: Kode ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Gagal: ${e.message}", Toast.LENGTH_SHORT).show()
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@AddQuestionActivity, "Koneksi Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
+        })
     }
 
     private fun clearForm() {
